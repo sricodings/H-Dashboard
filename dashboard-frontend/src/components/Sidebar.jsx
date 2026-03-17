@@ -30,7 +30,7 @@ export default function Sidebar() {
                     <i className="bi bi-question-circle" />
                     Documentation
                 </a>
-                <a href="https://srikanth-portfolio-eight.vercel.app/" target="_blank" rel="noopener noreferrer" className="sidebar-nav-item" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <a href="https://github.com/sricodings/H-Dashboard" target="_blank" rel="noopener noreferrer" className="sidebar-nav-item" style={{ textDecoration: 'none', color: 'inherit' }}>
                     <i className="bi bi-github" />
                     GitHub
                 </a>
