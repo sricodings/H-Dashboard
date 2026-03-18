@@ -262,7 +262,7 @@ export default function Dashboard() {
                             >
                                 {widgets.map(widget => (
                                     <div key={widget.id}>
-                                        <div className={`widget-card ${widget.config?.isAI ? 'ai-widget-glitter' : ''}`} style={{ height: '100%' }}>
+                                        <div className="widget-card" style={{ height: '100%' }}>
                                             <div className="widget-card-header">
                                                 <div className="widget-card-title">
                                                     <i className={`bi ${TYPE_ICONS[widget.type]} me-2`} style={{ color: 'var(--accent)', fontSize: '0.85rem' }} />

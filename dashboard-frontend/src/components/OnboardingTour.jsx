@@ -127,7 +127,6 @@ export default function OnboardingTour() {
             <div className="tour-spotlight" style={spotlightStyle} />
             <div className="tour-popover" style={popoverStyle}>
                 <h4>
-                    <span className="tour-icon">✨</span>
                     {currentStepData.title}
                 </h4>
                 <p>{currentStepData.content}</p>

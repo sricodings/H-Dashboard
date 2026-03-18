@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 const API = '/api';
 
 const QUICK_PROMPTS = [
-    'Add sample data ✨',
+    'Add sample data',
     'Bar chart: revenue by product',
     'KPI: total revenue',
     'Pie chart: order status',

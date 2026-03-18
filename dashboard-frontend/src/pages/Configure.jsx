@@ -234,7 +234,7 @@ export default function Configure() {
                                 >
                                     {widgets.map(widget => (
                                         <div key={widget.id}>
-                                            <div className={`widget-card ${widget.config?.isAI ? 'ai-widget-glitter' : ''}`} style={{ height: '100%' }}>
+                                            <div className="widget-card" style={{ height: '100%' }}>
                                                 <div className="widget-card-header">
                                                     <div className="widget-card-title widget-drag-handle" style={{ cursor: 'grab', flex: 1 }}>
                                                         <i className={`bi ${TYPE_ICONS[widget.type]} me-2`} style={{ color: 'var(--accent)', fontSize: '0.85rem' }} />

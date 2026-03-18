@@ -1,0 +1,11 @@
+{
+  "name": "h-dashboard",
+  "private": true,
+  "workspaces": [
+    "dashboard-frontend",
+    "dashboard-backend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=dashboard-frontend"
+  }
+}
