@@ -216,7 +216,6 @@ export default function AIPanel() {
                         <button className="ai-send-btn" onClick={() => sendMessage()} disabled={loading || !input.trim()}
                             style={{ fontWeight: 700, fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
                             <i className="bi bi-send-fill" />
-                            SEND
                         </button>
                     </div>
                 </div>
