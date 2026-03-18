@@ -17,7 +17,7 @@ const QUICK_PROMPTS = [
 
 const WELCOME_MSG = {
     role: 'bot',
-    content: '👋 Hi! I\'m your AI Dashboard Assistant. Describe a chart, KPI, or table and I\'ll add it to your dashboard instantly!\n\nTry: "Show me revenue by product as a bar chart"'
+    content: 'Hi! I am your AI Dashboard Assistant. Describe a chart, KPI, or table and I will add it to your dashboard instantly!\n\nTry: "Show me revenue by product as a bar chart"'
 };
 
 export default function AIPanel() {
@@ -41,7 +41,7 @@ export default function AIPanel() {
     const sendMessage = async (text = input) => {
         if (!text.trim() || loading) return;
 
-        if (text === 'Add sample data ✨') {
+        if (text === 'Add sample data') {
             setLoading(true);
             try {
                 const { data } = await axios.post(`${API}/ai/seed`);
@@ -113,6 +113,10 @@ export default function AIPanel() {
         }
     };
 
+    const stripEmojis = (text) => {
+        return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E6}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
+    };
+
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
     };
@@ -120,17 +124,17 @@ export default function AIPanel() {
     return (
         <>
             {/* FAB Button */}
-            <button className="ai-fab" onClick={() => setOpen(o => !o)} title="AI Dashboard Assistant" id="ai-fab-btn">
+            <button className="ai-fab" onClick={() => setOpen(o => !o)} title="AI Dashboard Assistant" id="ai-fab-btn" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div className="ai-pulse" />
-                <span>{open ? '✕' : '✨'}</span>
+                <span style={{ fontSize: '1.2rem' }}>{open ? <i className="bi bi-x-lg" /> : <i className="bi bi-stars" />}</span>
             </button>
 
             {/* AI Chat Panel */}
             {open && (
                 <div className="ai-panel" id="ai-chat-panel">
                     <div className="ai-panel-header">
-                        <div className="ai-avatar-icon">
-                            🤖
+                        <div className="ai-avatar-icon" style={{ background: 'var(--accent-gradient)', color: 'white', width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <i className="bi bi-robot" />
                         </div>
                         <div>
                             <h5>AI Assistant</h5>
@@ -145,12 +149,12 @@ export default function AIPanel() {
                     <div className="ai-messages">
                         {messages.map((msg, i) => (
                             <div key={i} className={`ai-message ${msg.role}`}>
-                                <div className={`ai-message-avatar ${msg.role === 'bot' ? 'ai-avatar-bot' : 'ai-avatar-user'}`}>
-                                    {msg.role === 'bot' ? '🤖' : '👤'}
+                                <div className={`ai-message-avatar ${msg.role === 'bot' ? 'ai-avatar-bot' : 'ai-avatar-user'}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>
+                                    {msg.role === 'bot' ? <i className="bi bi-robot" /> : <i className="bi bi-person-fill" />}
                                 </div>
                                 <div>
                                     <div className="ai-message-bubble">
-                                        {msg.content.split('\n').map((line, j) => (
+                                        {stripEmojis(msg.content).split('\n').map((line, j) => (
                                             <div key={j}>{line.replace(/\*\*/g, '')}</div>
                                         ))}
                                     </div>
@@ -170,7 +174,9 @@ export default function AIPanel() {
                         ))}
                         {loading && (
                             <div className="ai-message bot">
-                                <div className="ai-message-avatar ai-avatar-bot">🤖</div>
+                                <div className="ai-message-avatar ai-avatar-bot" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' }}>
+                                    <i className="bi bi-robot" />
+                                </div>
                                 <div className="ai-message-bubble">
                                     <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
                                         {[0, 1, 2].map(i => (
@@ -208,8 +214,9 @@ export default function AIPanel() {
                             disabled={loading}
                         />
                         <button className="ai-send-btn" onClick={() => sendMessage()} disabled={loading || !input.trim()}
-                            title="Send">
+                            style={{ fontWeight: 700, fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
                             <i className="bi bi-send-fill" />
+                            SEND
                         </button>
                     </div>
                 </div>

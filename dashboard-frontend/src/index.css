@@ -229,6 +229,10 @@ body {
   }
 }
 
+.no-export {
+  transition: opacity 0.2s ease;
+}
+
 /* ============================================
    NAVBAR
    ============================================ */
@@ -262,34 +266,38 @@ body {
   text-decoration: none;
 }
 
-.theme-toggle {
-  width: 44px;
-  height: 24px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 12px;
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: var(--nav-hover-bg);
   border: 1px solid var(--nav-border);
+  border-radius: 100px;
+  color: var(--nav-text);
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
-  position: relative;
   transition: var(--transition);
-  display: flex;
-  align-items: center;
-  padding: 2px;
+  margin-right: 12px;
 }
 
-.theme-toggle-knob {
-  width: 18px;
-  height: 18px;
-  background: var(--accent-gradient);
-  border-radius: 50%;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
+.theme-toggle-btn i {
+  font-size: 1.1rem;
 }
 
-[data-theme="dark"] .theme-toggle-knob {
-  transform: translateX(20px);
+.theme-toggle-btn:hover {
+  background: var(--nav-active-bg);
+  border-color: var(--nav-active-text);
+  box-shadow: 0 0 15px var(--nav-active-bg);
+}
+
+.theme-toggle-btn.light i {
+  color: #ffc107;
+}
+
+.theme-toggle-btn.dark i {
+  color: #0dcaf0;
 }
 
 /* ============================================
@@ -337,10 +345,19 @@ body {
   border-left-color: var(--nav-active-text);
 }
 
-.sidebar-nav-item i {
-  font-size: 1.1rem;
-  width: 20px;
-  text-align: center;
+.sidebar-nav-item .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--nav-text-muted);
+  opacity: 0.5;
+  transition: var(--transition);
+}
+
+.sidebar-nav-item.active .dot {
+  background: var(--nav-active-text);
+  opacity: 1;
+  box-shadow: 0 0 8px var(--nav-active-text);
 }
 
 .sidebar-section-title {

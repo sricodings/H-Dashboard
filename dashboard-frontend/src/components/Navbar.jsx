@@ -36,23 +36,13 @@ export default function Navbar() {
 
             {/* Theme Toggle */}
             <button
-                className="theme-toggle"
+                className={`theme-toggle-btn ${theme}`}
                 onClick={toggleTheme}
                 title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
-                <div className="theme-toggle-knob">
-                    {theme === 'dark' ? '🌙' : '☀️'}
-                </div>
+                <i className={`bi ${theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'}`} />
+                <span>{theme === 'dark' ? 'Dark' : 'Light'} Mode</span>
             </button>
-
-            {/* User Avatar */}
-            <div style={{
-                width: 32, height: 32, borderRadius: '50%',
-                background: 'var(--accent-gradient)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'white', fontSize: '0.85rem', fontWeight: 700,
-                cursor: 'pointer',
-            }}>H</div>
         </nav>
     );
 }

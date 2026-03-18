@@ -44,7 +44,7 @@ export default function TableWidget({ config, orders }) {
             <span className={`status-badge ${val === 'Completed' ? 'status-completed' :
                     val === 'In progress' ? 'status-progress' : 'status-pending'
                 }`}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor', display: 'inline-block' }} />
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor', display: 'inline-block', opacity: 0.8 }} />
                 {val}
             </span>
         );

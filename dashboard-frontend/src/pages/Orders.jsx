@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
 import { useOrders } from '../contexts/OrdersContext';
 import OrderForm from '../components/OrderForm';
 import { toast } from 'react-toastify';
@@ -19,7 +20,7 @@ export default function Orders() {
     const handleSeed = async () => {
         try {
             const API = '/api';
-            const { data } = await import('axios').then(m => m.default.post(`${API}/ai/seed`));
+            const { data } = await axios.post(`${API}/ai/seed`);
             if (data.success) {
                 toast.success(data.message);
                 fetchOrders('all');

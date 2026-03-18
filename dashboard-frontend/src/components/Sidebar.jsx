@@ -16,7 +16,7 @@ export default function Sidebar() {
                     to={item.path}
                     end={item.path === '/'}
                     className={({ isActive }) =>
-                        `sidebar-nav-item${isActive ? ' active' : ''}`
+                        `sidebar-nav-item ${isActive ? 'active' : ''}`
                     }
                 >
                     <i className={`bi ${item.icon}`} />
@@ -26,7 +26,7 @@ export default function Sidebar() {
 
             <div style={{ marginTop: 'auto', marginBottom: 60 }}>
                 <div className="sidebar-section-title">Help</div>
-                <a href="https://srikanth-portfolio-eight.vercel.app/" target="_blank" rel="noopener noreferrer" className="sidebar-nav-item" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <a href="https://www.youtube.com/watch?v=9kqDcKqfn6k" target="_blank" rel="noopener noreferrer" className="sidebar-nav-item" style={{ textDecoration: 'none', color: 'inherit' }}>
                     <i className="bi bi-question-circle" />
                     Documentation
                 </a>

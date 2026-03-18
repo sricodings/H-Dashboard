@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDashboard } from '../contexts/DashboardContext';
 import { useOrders } from '../contexts/OrdersContext';
@@ -10,6 +10,7 @@ import AIInsights from '../components/AIInsights';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import emailjs from '@emailjs/browser';
+import html2canvas from 'html2canvas';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -32,8 +33,9 @@ const DATE_OPTIONS = [
 
 export default function Dashboard() {
     const navigate = useNavigate();
-    const { 
-        widgets, layouts, loadDashboard, onLayoutChange, loading: dashLoading 
+    const dashboardRef = useRef(null);
+    const {
+        widgets, layouts, loadDashboard, onLayoutChange, loading: dashLoading
     } = useDashboard();
     const { orders, loading: ordersLoading, fetchOrders, dateFilter, setDateFilter } = useOrders();
     const { width, containerRef, mounted } = useContainerWidth();
@@ -50,6 +52,57 @@ export default function Dashboard() {
     const handleDateFilter = (val) => {
         setDateFilter(val);
         fetchOrders(val);
+    };
+
+    const handleDownloadWidget = async (id, title) => {
+        const element = document.getElementById(`widget-${id}`);
+        if (!element) return;
+
+        try {
+            const bodyStyle = window.getComputedStyle(document.body);
+            const bgColor = bodyStyle.getPropertyValue('--bg-primary').trim() || '#ffffff';
+            
+            const canvas = await html2canvas(element, {
+                backgroundColor: bgColor,
+                scale: 2,
+                logging: false,
+                useCORS: true
+            });
+            const link = document.createElement('a');
+            link.download = `${title.toLowerCase().replace(/\s+/g, '-')}-chart.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            toast.success("Chart downloaded!");
+        } catch (error) {
+            console.error("Download failed", error);
+            toast.error("Failed to download chart.");
+        }
+    };
+
+    const handleDownloadCanvas = async () => {
+        if (!dashboardRef.current) return;
+        const toastId = toast.loading("Capturing dashboard...");
+
+        try {
+            const bodyStyle = window.getComputedStyle(document.body);
+            const bgColor = bodyStyle.getPropertyValue('--bg-app').trim() || '#f4f6f9';
+
+            const canvas = await html2canvas(dashboardRef.current, {
+                backgroundColor: bgColor,
+                scale: 1.5,
+                logging: false,
+                useCORS: true,
+                ignoreElements: (el) => el.classList.contains('no-export')
+            });
+            const link = document.createElement('a');
+            link.download = `dashboard-export-${new Date().toISOString().slice(0, 10)}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            toast.update(toastId, { render: "Dashboard exported!", type: "success", isLoading: false, autoClose: 2000 });
+        } catch (error) {
+            console.error("Canvas export failed", error);
+            toast.update(toastId, { render: "Failed to export dashboard.", type: "error", isLoading: false, autoClose: 2000 });
+        }
     };
 
     const handleMailSummary = async () => {
@@ -70,7 +123,7 @@ export default function Dashboard() {
         }
 
         const statsText = `Total Orders: ${stats.total}\nRevenue: $${stats.revenue.toLocaleString()}\nCompleted: ${stats.completed}\nAvg Order Value: $${stats.avgOrder.toFixed(2)}`;
-        
+
         // --- Trend Chart Generation for Email ---
         // Get last 10 data points for a mini trend chart
         const dailyData = {};
@@ -185,103 +238,114 @@ export default function Dashboard() {
             {/* Page Header */}
             <div className="page-header">
                 <div>
-                    <h1 className="page-title">Dashboard</h1>
-                    <p className="page-subtitle">Your personalized analytics overview</p>
+                    <h1 className="page-title">Analytics Dashboard</h1>
+                    <p className="page-subtitle">Personalized business metrics & insights</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                     {/* Date Filter */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>Show data for</span>
+                    <div className="no-export" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <select className="form-select-custom" value={dateFilter}
                             onChange={e => handleDateFilter(e.target.value)}
-                            style={{ width: 150 }}>
+                            style={{ width: 140 }}>
                             {DATE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                         </select>
                     </div>
-                    <button className="btn-secondary-custom" onClick={handleMailSummary} style={{ background: 'var(--info-light)', color: 'var(--info)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: 6, fontWeight: 500 }}>
-                        <i className="bi bi-envelope-paper" /> Mail Summary
+                    <button className="btn-secondary-custom no-export" onClick={handleDownloadCanvas} style={{ background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border)', padding: '0.4rem 0.8rem', borderRadius: 8, fontWeight: 500 }}>
+                        <i className="bi bi-download" /> Export Canvas
                     </button>
-                    <button className="btn-primary-custom" onClick={() => navigate('/configure')}>
-                        <i className="bi bi-sliders2" /> Configure Dashboard
+                    <button className="btn-secondary-custom no-export" onClick={handleMailSummary} style={{ background: 'var(--info-light)', color: 'var(--info)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: 8, fontWeight: 500 }}>
+                        Mail Summary
+                    </button>
+                    <button className="btn-primary-custom no-export" onClick={() => navigate('/configure')}>
+                        Configure
                     </button>
                 </div>
             </div>
 
-            {/* AI Insights Section */}
-            <div className="page-content" style={{ paddingBottom: 0 }}>
-                <AIInsights orders={orders} />
-            </div>
+            <div ref={dashboardRef}>
+                {/* AI Insights Section */}
+                <div className="page-content" style={{ paddingBottom: 0 }}>
+                    <AIInsights orders={orders} />
+                </div>
 
-            {/* Summary Stat Cards */}
-            <div className="stat-cards">
-                {[
-                    { icon: 'bi-cart3', color: 'var(--accent)', bg: 'var(--accent-light)', label: 'Total Orders', value: stats.total },
-                    { icon: 'bi-currency-dollar', color: 'var(--success)', bg: 'var(--success-light)', label: 'Total Revenue', value: `$${stats.revenue.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, pulse: true },
-                    { icon: 'bi-check-circle-fill', color: 'var(--info)', bg: 'var(--info-light)', label: 'Completed', value: stats.completed },
-                    { icon: 'bi-graph-up-arrow', color: 'var(--warning)', bg: 'var(--warning-light)', label: 'Avg Order Value', value: `$${stats.avgOrder.toFixed(2)}` },
-                ].map((s, i) => (
-                    <div className="stat-card fade-in" key={i} style={{ animationDelay: `${i * 0.1}s` }}>
-                        <div className="stat-icon" style={{ background: s.bg, color: s.color }}>
-                            <i className={`bi ${s.icon} stat-card-icon-inner ${s.pulse ? 'pulse' : ''}`} />
+                {/* Summary Stat Cards */}
+                <div className="stat-cards">
+                    {[
+                        { icon: 'bi-cart3', color: 'var(--accent)', label: 'Total Orders', value: stats.total },
+                        { icon: 'bi-currency-dollar', color: 'var(--success)', label: 'Total Revenue', value: `$${stats.revenue.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` },
+                        { icon: 'bi-check-circle-fill', color: 'var(--info)', label: 'Completed', value: stats.completed },
+                        { icon: 'bi-graph-up-arrow', color: 'var(--warning)', label: 'Avg Order Value', value: `$${stats.avgOrder.toFixed(2)}` },
+                    ].map((s, i) => (
+                        <div className="stat-card fade-in" key={i} style={{ animationDelay: `${i * 0.1}s` }}>
+                            <div className="stat-info">
+                                <div className="stat-card-label" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                    <i className={`bi ${s.icon}`} style={{ color: s.color, opacity: 0.7, fontSize: '0.9rem' }} />
+                                    {s.label}
+                                </div>
+                                <div className="stat-card-value">{s.value}</div>
+                            </div>
                         </div>
-                        <div className="stat-info">
-                            <div className="stat-card-value">{s.value}</div>
-                            <div className="stat-card-label">{s.label}</div>
-                        </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
 
-            {/* Dashboard Content */}
-            <div className="page-content">
-                {widgets.length === 0 ? (
-                    <div className="dash-card">
-                        <div className="empty-state">
-                            <div className="empty-state-icon"><i className="bi bi-layout-wtf" /></div>
-                            <h3>No Widgets Configured</h3>
-                            <p>Click "Configure Dashboard" to add charts, tables, and KPI cards to your dashboard.</p>
-                            <button className="btn-primary-custom" onClick={() => navigate('/configure')}>
-                                <i className="bi bi-sliders2" /> Configure Dashboard
-                            </button>
+                {/* Dashboard Content */}
+                <div className="page-content">
+                    {widgets.length === 0 ? (
+                        <div className="dash-card">
+                            <div className="empty-state">
+                                <div className="empty-state-icon"><i className="bi bi-layout-wtf" /></div>
+                                <h3>No Widgets Configured</h3>
+                                <p>Click "Configure Dashboard" to add charts, tables, and KPI cards to your dashboard.</p>
+                                <button className="btn-primary-custom" onClick={() => navigate('/configure')}>
+                                    Configure Dashboard
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                ) : (
-                    <div ref={containerRef} style={{ width: '100%' }}>
-                        {mounted && (
-                            <ResponsiveGridLayout
-                                className="layout"
-                                layouts={layouts}
-                                width={width}
-                                breakpoints={{ lg: 1200, md: 768, sm: 480 }}
-                                cols={{ lg: 12, md: 8, sm: 4 }}
-                                rowHeight={80}
-                                isDraggable={true}
-                                isResizable={true}
-                                margin={[12, 12]}
-                                onLayoutChange={handleLayoutChange}
-                            >
-                                {widgets.map(widget => (
-                                    <div key={widget.id}>
-                                        <div className="widget-card" style={{ height: '100%' }}>
-                                            <div className="widget-card-header">
-                                                <div className="widget-card-title">
-                                                    <i className={`bi ${TYPE_ICONS[widget.type]} me-2`} style={{ color: 'var(--accent)', fontSize: '0.85rem' }} />
-                                                    {widget.title}
+                    ) : (
+                        <div ref={containerRef} style={{ width: '100%' }}>
+                            {mounted && (
+                                <ResponsiveGridLayout
+                                    className="layout"
+                                    layouts={layouts}
+                                    width={width}
+                                    breakpoints={{ lg: 1200, md: 768, sm: 480 }}
+                                    cols={{ lg: 12, md: 8, sm: 4 }}
+                                    rowHeight={80}
+                                    isDraggable={true}
+                                    isResizable={true}
+                                    margin={[12, 12]}
+                                    onLayoutChange={handleLayoutChange}
+                                >
+                                    {widgets.map(widget => (
+                                        <div key={widget.id}>
+                                            <div id={`widget-${widget.id}`} className="widget-card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                                <div className="widget-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <div className="widget-card-title">
+                                                        {widget.title}
+                                                        {widget.description && (
+                                                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginLeft: 8, fontWeight: 400 }}>{widget.description}</span>
+                                                        )}
+                                                    </div>
+                                                    <button
+                                                        className="no-export"
+                                                        onClick={() => handleDownloadWidget(widget.id, widget.title)}
+                                                        style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 4, borderRadius: 4 }}
+                                                        title="Download as image"
+                                                    >
+                                                        <i className="bi bi-download" />
+                                                    </button>
                                                 </div>
-                                                {widget.description && (
-                                                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginLeft: 8 }}>{widget.description}</span>
-                                                )}
-                                            </div>
-                                            <div className="widget-card-body" style={{ padding: widget.type === 'table' ? 0 : 12 }}>
-                                                {renderWidget(widget)}
+                                                <div className="widget-card-body" style={{ flex: 1, padding: widget.type === 'table' ? 0 : 12, overflow: 'hidden' }}>
+                                                    {renderWidget(widget)}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </ResponsiveGridLayout>
-                        )}
-                    </div>
-                )}
+                                    ))}
+                                </ResponsiveGridLayout>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

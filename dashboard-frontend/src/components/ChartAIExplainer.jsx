@@ -67,20 +67,20 @@ export default function ChartAIExplainer({ config, data }) {
                         <button 
                             className="btn-icon-custom" 
                             onClick={toggleAudio}
-                            style={{ background: playing ? 'var(--accent)' : 'var(--bg-secondary)', color: playing ? '#fff' : 'var(--text-primary)', border: '1px solid var(--border)', padding: '4px 8px', borderRadius: 4, fontSize: '0.8rem' }}
-                            title="Play Audio"
+                            style={{ background: playing ? 'var(--accent)' : 'var(--bg-secondary)', color: playing ? '#fff' : 'var(--text-primary)', border: '1px solid var(--border)', padding: '4px 10px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}
                         >
                             <i className={`bi ${playing ? 'bi-stop-fill' : 'bi-play-fill'}`} />
+                            {playing ? 'Stop' : 'Play'}
                         </button>
                     )}
                     <button 
                         className="btn-icon-custom" 
                         onClick={getExplanation}
                         disabled={loading}
-                        style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', padding: '4px 8px', borderRadius: 4, fontSize: '0.8rem', color: 'var(--text-primary)' }}
-                        title="AI AI Explainer"
+                        style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', padding: '4px 10px', borderRadius: 4, fontSize: '0.75rem', color: 'var(--text-primary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}
                     >
-                        {loading ? <i className="bi bi-hourglass-split" /> : <i className="bi bi-robot" />}
+                        {loading ? <i className="bi bi-hourglass-split spin" /> : <i className="bi bi-robot" />}
+                        {loading ? 'Analyzing...' : 'AI Explain'}
                     </button>
                 </div>
                 
@@ -99,9 +99,9 @@ export default function ChartAIExplainer({ config, data }) {
                         color: '#333',
                         boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
                     }}>
-                        <div style={{ fontWeight: 600, marginBottom: 4, color: 'var(--accent)', display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ fontWeight: 600, marginBottom: 6, color: 'var(--accent)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem' }}>
                             <span>AI Insights</span>
-                            <i className="bi bi-x" style={{ cursor: 'pointer' }} onClick={() => { setExplanation(''); window.speechSynthesis.cancel(); setPlaying(false); }} />
+                            <span style={{ cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)' }} onClick={() => { setExplanation(''); window.speechSynthesis.cancel(); setPlaying(false); }}>CLOSE</span>
                         </div>
                         {explanation}
                     </div>
