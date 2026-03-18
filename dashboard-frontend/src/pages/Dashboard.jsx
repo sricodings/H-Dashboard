@@ -13,7 +13,7 @@ import emailjs from '@emailjs/browser';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API = '/api';
 
 const TYPE_ICONS = {
     'kpi': 'bi-123', 'bar-chart': 'bi-bar-chart', 'line-chart': 'bi-graph-up',

@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dashboard-backend/server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "dashboard-frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    }
+  ],
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/dashboard-backend/server.js" },
+    { "source": "/(css|js|img|assets)/(.*)", "destination": "/dashboard-frontend/$1/$2" },
+    { "source": "/(.*)", "destination": "/dashboard-frontend/index.html" }
+  ]
+}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API = '/api';
 
 export default function AIInsights({ orders }) {
     const [insights, setInsights] = useState([]);

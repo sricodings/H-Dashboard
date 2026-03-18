@@ -18,7 +18,7 @@ export default function Orders() {
 
     const handleSeed = async () => {
         try {
-            const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            const API = '/api';
             const { data } = await import('axios').then(m => m.default.post(`${API}/ai/seed`));
             if (data.success) {
                 toast.success(data.message);
