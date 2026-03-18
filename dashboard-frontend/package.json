@@ -27,8 +27,9 @@
     "recharts": "^3.8.0",
     "typescript": "^5.5.0",
     "uuid": "^13.0.0",
-    "vite": "^6.0.0",
-    "@rolldown/binding-linux-x64-gnu": "1.0.0-rc.9",
-    "lightningcss-linux-x64-gnu": "1.32.0"
+    "vite": "^6.0.0"
+  },
+  "devDependencies": {
+    "lightningcss": "^1.32.0"
   }
 }
