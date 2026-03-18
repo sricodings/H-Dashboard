@@ -26,11 +26,11 @@ export default function Sidebar() {
 
             <div style={{ marginTop: 'auto', marginBottom: 60 }}>
                 <div className="sidebar-section-title">Help</div>
-                <a href="https://www.youtube.com/watch?v=9kqDcKqfn6k" target="_blank" rel="noopener noreferrer" className="sidebar-nav-item" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <a href="https://www.youtube.com/watch?v=9kqDcKqfn6k" target="_blank" rel="noopener noreferrer" className="sidebar-nav-item" style={{ textDecoration: 'none', color: 'var(--text-primary)' }}>
                     <i className="bi bi-question-circle" />
                     Documentation
                 </a>
-                <a href="https://github.com/sricodings/H-Dashboard" target="_blank" rel="noopener noreferrer" className="sidebar-nav-item" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <a href="https://github.com/sricodings/H-Dashboard" target="_blank" rel="noopener noreferrer" className="sidebar-nav-item" style={{ textDecoration: 'none', color: 'var(--text-primary)' }}>
                     <i className="bi bi-github" />
                     GitHub
                 </a>
