@@ -1,18 +1,23 @@
-# H-Dashboard
+A full-stack web application designed to manage and visualize data efficiently with a clean user interface and robust backend integration.
 
-VISIT : https://h-dashboard-phi.vercel.app/
+Live Demo
 
-VIDEO : https://www.youtube.com/watch?v=9kqDcKqfn6k
+https://h-dashboard-phi.vercel.app/
 
-TECH STACK :
+Demo Video
 
-React Js
-Node Js
-Express Js
+https://www.youtube.com/watch?v=9kqDcKqfn6k
+
+Tech Stack
+Frontend
+React JS
+Bootstrap
+Backend
+Node JS
+Express JS
+Database
 MySQL
-
-Deployment and Tools :
-
-Vercel
-Clever Cloud
-EmailJS
+Deployment and Tools
+Vercel (Frontend Hosting)
+Clever Cloud (Backend Hosting)
+EmailJS (Email Services)
