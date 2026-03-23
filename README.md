@@ -1,4 +1,4 @@
-A full stack web application designed to manage and visualize data efficiently with a clean user interface and robust backend integration.
+## A full stack web application designed to manage and visualize data efficiently with a clean user interface and robust backend integration.
 
 Live Demo
 
